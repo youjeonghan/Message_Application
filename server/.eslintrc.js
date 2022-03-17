@@ -10,5 +10,6 @@ module.exports = {
   rules: {
     'import/no-dynamic-require': 'off',
     'global-require': 'off',
+    'linebreak-style': 'off',
   },
 };
