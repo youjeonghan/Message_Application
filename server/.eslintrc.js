@@ -8,5 +8,7 @@ module.exports = {
   extends: ['airbnb-base'],
   parserOptions: { ecmaVersion: 13 },
   rules: {
+    'import/no-dynamic-require': 'off',
+    'global-require': 'off',
   },
 };
