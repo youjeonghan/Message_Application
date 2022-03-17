@@ -10,6 +10,7 @@ const sequelize = new Sequelize({
   database: process.env.DB_DATABASE,
   username: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
+  logging: false,
 });
 
 fs.readdirSync(__dirname)
