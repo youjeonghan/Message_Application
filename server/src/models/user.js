@@ -14,5 +14,7 @@ module.exports = function user(sequelize, DataTypes) {
       type: DataTypes.STRING(20),
       allowNull: false,
     },
+  }, {
+    freezeTableName: true,
   });
 };
