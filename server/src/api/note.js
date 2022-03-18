@@ -5,6 +5,7 @@ const authController = require('../controller/auth_controller');
 const noteController = require('../controller/note_controller');
 
 note.use(authController.certify);
+note.get('/', noteController.readAllNote);
 note.post('/', noteController.createNote);
 
 module.exports = note;
