@@ -1,5 +1,6 @@
 const passport = require('koa-passport');
 const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
 const db = require('./models/index');
 
 passport.serializeUser((user, done) => {
@@ -23,10 +24,12 @@ passport.use('sign', new LocalStrategy({
   if (user) {
     return done(null, false);
   }
-
+  const salt = crypto.randomBytes(64).toString('base64');
+  const scryptPassword = crypto.scryptSync(password, salt, 64).toString('base64');
   user = await db.user.create({
     name,
-    password,
+    password: scryptPassword,
+    salt,
   });
   return done(null, user);
 }));
