@@ -8,7 +8,8 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  done(null, id);
+  const user = db.user.findOne({ where: { id } });
+  done(null, user);
 });
 
 passport.use('sign', new LocalStrategy({
