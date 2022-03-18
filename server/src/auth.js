@@ -14,8 +14,7 @@ passport.deserializeUser((id, done) => {
 passport.use('sign', new LocalStrategy({
   usernameField: 'name',
   passwordField: 'password',
-  passReqToCallback: true,
-}, async (req, name, password, done) => {
+}, async (name, password, done) => {
   let user = await db.user.findOne({
     where: {
       name,
@@ -31,5 +30,30 @@ passport.use('sign', new LocalStrategy({
     password: scryptPassword,
     salt,
   });
+  return done(null, user);
+}));
+
+passport.use('login', new LocalStrategy({
+  usernameField: 'name',
+  passwordField: 'password',
+}, async (name, password, done) => {
+  const user = await db.user.findOne({
+    where: {
+      name,
+    },
+  });
+
+  // 해당 user가 없는 경우
+  if (user === null) {
+    return done(null, false);
+  }
+
+  // password가 틀린 경우
+  const scryptPassword = crypto.scryptSync(password, user.salt, 64).toString('base64');
+  if (scryptPassword !== user.password) {
+    return done(null, false);
+  }
+
+  // name, password 모두 일치
   return done(null, user);
 }));
