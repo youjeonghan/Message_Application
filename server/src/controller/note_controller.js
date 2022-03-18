@@ -24,6 +24,18 @@ exports.readAllNote = async (ctx) => {
   ctx.status = 200;
 };
 
+exports.readNote = async (ctx) => {
+  const { id: noteId } = ctx.params;
+  try {
+    ctx.body = {
+      result: await db.note.findOne({ where: { id: noteId } }),
+    };
+  } catch (e) {
+    return ctx.throw(500, e);
+  }
+  ctx.status = 200;
+};
+
 exports.updateNote = async (ctx) => {
   const { id: noteId } = ctx.params;
   const { content } = ctx.request.body;

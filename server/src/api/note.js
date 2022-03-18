@@ -6,6 +6,7 @@ const noteController = require('../controller/note_controller');
 
 note.get('/', noteController.readAllNote);
 note.post('/', authController.certify, noteController.createNote);
+note.get('/:id', authController.certify, noteController.readNote);
 note.patch('/:id', authController.certify, noteController.updateNote);
 note.delete('/:id', authController.certify, noteController.deleteNote);
 
