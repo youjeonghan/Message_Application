@@ -11,5 +11,7 @@ note.get('/:noteId', authController.certify, noteController.readNote);
 note.patch('/:noteId', authController.certify, noteController.updateNote);
 note.delete('/:noteId', authController.certify, noteController.deleteNote);
 note.post('/:noteId/comment', authController.certify, commentController.createComment);
+note.patch('/:noteId/comment/:commentId', authController.certify, commentController.updateComment);
+
 
 module.exports = note;
