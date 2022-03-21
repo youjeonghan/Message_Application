@@ -1,5 +1,5 @@
-module.exports = function note(sequelize, DataTypes) {
-  return sequelize.define('note', {
+module.exports = (sequelize, DataTypes) => {
+  const note = sequelize.define('note', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -9,10 +9,6 @@ module.exports = function note(sequelize, DataTypes) {
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      // references: {
-      //   model: 'user',
-      //   key: 'id',
-      // },
     },
     content: {
       type: DataTypes.TEXT,
@@ -21,4 +17,12 @@ module.exports = function note(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
   });
+
+  note.associate = (models) => {
+    models.note.belongsTo(models.user, {
+      foreignKey: 'id',
+    });
+  };
+
+  return note;
 };
