@@ -1,10 +1,14 @@
 module.exports = (sequelize, DataTypes) => {
-  const note = sequelize.define('note', {
+  const comment = sequelize.define('comment', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
+    },
+    noteId: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     userId: {
       type: DataTypes.INTEGER,
@@ -18,12 +22,15 @@ module.exports = (sequelize, DataTypes) => {
     freezeTableName: true,
   });
 
-  note.associate = (models) => {
-    models.note.belongsTo(models.user, {
+  comment.associate = (models) => {
+    models.comment.belongsTo(models.note, {
+      foreignKey: 'noteId',
+      onDelete: 'cascade',
+    });
+    models.comment.belongsTo(models.user, {
       foreignKey: 'userId',
     });
-    models.note.hasMany(models.comment);
   };
 
-  return note;
+  return comment;
 };
