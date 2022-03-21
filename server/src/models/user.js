@@ -1,5 +1,5 @@
-module.exports = function user(sequelize, DataTypes) {
-  return sequelize.define('user', {
+module.exports = (sequelize, DataTypes) => {
+  const user = sequelize.define('user', {
     id: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -21,4 +21,10 @@ module.exports = function user(sequelize, DataTypes) {
   }, {
     freezeTableName: true,
   });
+
+  user.associate = (models) => {
+    models.user.hasMany(models.note);
+  };
+
+  return user;
 };

@@ -13,6 +13,11 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
+function syncDB() {
+  db.user.sync();
+  db.note.sync();
+}
+
 fs.readdirSync(__dirname)
   .filter(
     (file) => file.indexOf('.') !== 0 && file !== basename && file.slice(-3) === '.js',
@@ -25,11 +30,12 @@ fs.readdirSync(__dirname)
     db[model.name] = model;
   });
 
+syncDB(db);
+
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
     db[modelName].associate(db);
   }
-  db[modelName].sync();
 });
 
 db.sequelize = sequelize;
