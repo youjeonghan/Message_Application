@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    user_id: {
+    userId: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
 
   note.associate = (models) => {
     models.note.belongsTo(models.user, {
-      foreignKey: 'id',
+      foreignKey: 'userId',
     });
   };
 

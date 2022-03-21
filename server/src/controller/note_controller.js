@@ -4,9 +4,11 @@ const { PAGE_OFFSET } = require('../utils/constants');
 
 exports.createNote = async (ctx) => {
   const { content } = ctx.request.body;
+  const { id: userId } = await ctx.state.user;
+
   try {
     await db.note.create({
-      user_id: 1,
+      userId,
       content,
     });
   } catch (e) {
@@ -50,7 +52,7 @@ exports.updateNote = async (ctx) => {
   try {
     const result = (await db.note.update(
       { content },
-      { where: { id: noteId, user_id: userId } },
+      { where: { id: noteId, userId } },
     ))[0];
     if (result !== 0) {
       ctx.status = 200; // 정상적인 요청
@@ -67,7 +69,7 @@ exports.deleteNote = async (ctx) => {
   const { id: userId } = await ctx.state.user;
   try {
     const result = await db.note.destroy(
-      { where: { id: noteId, user_id: userId } },
+      { where: { id: noteId, userId } },
     );
     if (result !== 0) {
       ctx.status = 200; // 정상적인 요청
