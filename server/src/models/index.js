@@ -13,9 +13,10 @@ const sequelize = new Sequelize({
   logging: false,
 });
 
-function syncDB() {
-  db.user.sync();
-  db.note.sync();
+async function syncDB() {
+  await db.user.sync();
+  await db.note.sync();
+  await db.comment.sync();
 }
 
 fs.readdirSync(__dirname)

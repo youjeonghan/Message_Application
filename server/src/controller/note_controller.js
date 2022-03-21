@@ -34,7 +34,7 @@ exports.readNotes = async (ctx) => {
 };
 
 exports.readNote = async (ctx) => {
-  const { id: noteId } = ctx.params;
+  const { noteId } = ctx.params;
   try {
     ctx.body = {
       result: await db.note.findOne({ where: { id: noteId } }),
@@ -46,7 +46,7 @@ exports.readNote = async (ctx) => {
 };
 
 exports.updateNote = async (ctx) => {
-  const { id: noteId } = ctx.params;
+  const { noteId } = ctx.params;
   const { content } = ctx.request.body;
   const { id: userId } = await ctx.state.user;
   try {
@@ -65,7 +65,7 @@ exports.updateNote = async (ctx) => {
 };
 
 exports.deleteNote = async (ctx) => {
-  const { id: noteId } = ctx.params;
+  const { noteId } = ctx.params;
   const { id: userId } = await ctx.state.user;
   try {
     const result = await db.note.destroy(
