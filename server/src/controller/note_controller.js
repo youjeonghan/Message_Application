@@ -1,4 +1,6 @@
 const db = require('../models/index');
+const { checkPositiveNumber } = require('../utils/validate');
+const { PAGE_OFFSET } = require('../utils/constants');
 
 exports.createNote = async (ctx) => {
   const { content } = ctx.request.body;
@@ -13,10 +15,15 @@ exports.createNote = async (ctx) => {
   ctx.status = 200;
 };
 
-exports.readAllNote = async (ctx) => {
+exports.readNotes = async (ctx) => {
+  const page = checkPositiveNumber(ctx.query.page) ? +ctx.query.page : 1;
   try {
     ctx.body = {
-      result: await db.note.findAll({}),
+      result: await db.note.findAll({
+        offset: (page - 1) * PAGE_OFFSET,
+        limit: PAGE_OFFSET,
+        order: [['createdAt', 'DESC']],
+      }),
     };
   } catch (e) {
     return ctx.throw(500, e);

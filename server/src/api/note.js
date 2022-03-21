@@ -4,7 +4,7 @@ const note = new Router();
 const authController = require('../controller/auth_controller');
 const noteController = require('../controller/note_controller');
 
-note.get('/', noteController.readAllNote);
+note.get('/', noteController.readNotes);
 note.post('/', authController.certify, noteController.createNote);
 note.get('/:id', authController.certify, noteController.readNote);
 note.patch('/:id', authController.certify, noteController.updateNote);
