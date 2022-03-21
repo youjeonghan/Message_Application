@@ -36,3 +36,19 @@ exports.updateComment = async (ctx) => {
   }
 };
 
+exports.deleteComment = async (ctx) => {
+  const { commentId } = ctx.params;
+  const { id: userId } = await ctx.state.user;
+  try {
+    const result = await db.comment.destroy(
+      { where: { id: commentId, userId } },
+    );
+    if (result !== 0) {
+      ctx.status = 200; // 정상적인 요청
+    } else {
+      ctx.status = 400; // 잘못된 요청
+    }
+  } catch (e) {
+    return ctx.throw(500, e);
+  }
+};
