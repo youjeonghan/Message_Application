@@ -1,1 +1,1 @@
-exports.PAGE_OFFSET = 10;
+exports.PAGE_OFFSET = 8;
