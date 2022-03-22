@@ -6,6 +6,7 @@ const passport = require('koa-passport');
 const views = require('koa-views');
 const apiRouter = require('./api');
 const router = require('./routes');
+const { PORT } = require('./utils/constants');
 
 const render = views(`${__dirname}/views`, {
   map: { html: 'underscore' },
@@ -24,4 +25,7 @@ app.use(router.routes());
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
 
-app.listen(3000);
+app.listen(PORT, () => {
+  console.log(`Listen to port ${PORT}`);
+  console.log(`http://localhost:${PORT}`);
+});
