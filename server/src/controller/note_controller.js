@@ -29,6 +29,8 @@ exports.readNotes = async (ctx) => {
           {
             model: db.user,
             attributes: ['name'],
+          }, {
+            model: db.comment,
           }],
       }),
     };
@@ -42,7 +44,16 @@ exports.readNote = async (ctx) => {
   const { noteId } = ctx.params;
   try {
     ctx.body = {
-      result: await db.note.findOne({ where: { id: noteId } }),
+      result: await db.note.findOne({
+        where: { id: noteId },
+        include: [
+          {
+            model: db.user,
+            attributes: ['name'],
+          }, {
+            model: db.comment,
+          }],
+      }),
     };
   } catch (e) {
     return ctx.throw(500, e);
