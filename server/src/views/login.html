@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메모 어플</title>
+    <style>
+      .login-section {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 3px solid;
+        border-radius: 5px;
+        padding: 10px;
+      }
+      input {
+        border: 1px solid;
+        border-radius: 10px;
+      }
+      .text-input {
+        display: block;
+        width: 500px;
+        height: 50px;
+        font-size: 20px;
+        margin-bottom: 10px;
+      }
+      .submit {
+        width: 60px;
+        height: 30px;
+        font-size: 15px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="login-section">
+      <form action="/users/login" method="post">
+        <input class="text-input" name="name" type="text" placeholder="아이디를 입력해주세요" />
+        <input
+          class="text-input"
+          name="password"
+          type="password"
+          placeholder="비밀번호를 입력해주세요"
+        />
+        <input class="submit" type="submit" value="로그인" />
+      </form>
+    </div>
+  </body>
+</html>

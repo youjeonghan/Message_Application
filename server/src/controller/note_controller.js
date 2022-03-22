@@ -21,10 +21,15 @@ exports.readNotes = async (ctx) => {
   const page = checkPositiveNumber(ctx.query.page) ? +ctx.query.page : 1;
   try {
     ctx.body = {
-      result: await db.note.findAll({
+      result: await db.note.findAndCountAll({
         offset: (page - 1) * PAGE_OFFSET,
         limit: PAGE_OFFSET,
         order: [['createdAt', 'DESC']],
+        include: [
+          {
+            model: db.user,
+            attributes: ['name'],
+          }],
       }),
     };
   } catch (e) {

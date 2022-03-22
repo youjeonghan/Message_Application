@@ -4,11 +4,13 @@ const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const passport = require('koa-passport');
 const views = require('koa-views');
-const router = require('./api');
+const apiRouter = require('./api');
+const router = require('./routes');
 
 const render = views(`${__dirname}/views`, {
   map: { html: 'underscore' },
 });
+
 require('./auth');
 
 const app = new Koa();
@@ -18,8 +20,8 @@ app.use(bodyParser());
 app.use(session({}, app));
 app.use(passport.initialize());
 app.use(passport.session());
-
 app.use(router.routes());
-app.use(router.allowedMethods());
+app.use(apiRouter.routes());
+app.use(apiRouter.allowedMethods());
 
 app.listen(3000);
