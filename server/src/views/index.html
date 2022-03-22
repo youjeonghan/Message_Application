@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메모 어플</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      body {
+        background-color: #dae0e6;
+        margin: 0;
+      }
+      .header {
+        position: fixed;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        box-sizing: border-box;
+
+        background-color: white;
+        padding: 0 20vw;
+        height: 80px;
+        width: 100vw;
+        font-size: 25px;
+      }
+      .appname {
+        font-weight: bold;
+      }
+      .my .post {
+        margin-right: 10px;
+      }
+      .my .username {
+        font-weight: bold;
+      }
+      .app {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 150px 4vw;
+      }
+      .memo-list {
+        display: grid;
+        gap: 15px;
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+        margin-bottom: 10px;
+      }
+      .memo {
+        background-color: aliceblue;
+        width: 280px;
+        height: 300px;
+        border: 2px solid;
+        border-radius: 10px;
+        padding: 10px;
+        box-sizing: border-box;
+        font-size: 18px;
+      }
+      .memo-top {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .memo .username {
+        display: inline;
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .memo .memo-option {
+        display: inline;
+      }
+      .memo .content {
+        display: block;
+        width: 250px;
+        height: 200px;
+        resize: none;
+      }
+      .pagination button {
+        display: inline;
+        margin: 0 2px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <span class="appname">메모 어플리케이션</span>
+      <span class="my">
+        <button class="post">메모 추가</button>
+        <button class="sign">회원가입</button>
+        <button class="login">로그인</button>
+      </span>
+    </div>
+    <div class="app">
+      <div class="memo-list"></div>
+      <div class="pagination"></div>
+    </div>
+
+    <script>
+      const $ = document.querySelector.bind(document);
+      async function addMemoItem(page = 1) {
+        const data = (
+          await axios({
+            url: `http://localhost:3000/notes?page=${page}`,
+            method: 'get',
+          })
+        ).data['result'];
+
+        const memoListCount = data['count'];
+        const memoList = data['rows'];
+
+        $('.memo-list').innerHTML = '';
+        memoList.forEach((memo) => {
+          const checkUser = memo.user.name == showCookieValue('userId');
+          const item = document.createElement('div');
+          item.className = 'memo';
+          item.innerHTML = `
+          <div class="memo-top">
+            <div class="username">글쓴이 ${memo.user.name}</div>
+            <div class="memo-option" ${checkUser ? '' : `style="display: none"`} >
+              <button class="update-form">수정</button>
+              <button class="delete">삭제</button>
+            </div>
+          </div>
+          <div class="content">${memo.content}</div>`;
+
+          item.querySelector('.update-form').addEventListener('click', async () => {
+            item.innerHTML = `
+            <div class="memo-top">
+              <div class="username">글쓴이 ${memo.user.name}</div>
+              <div class="memo-option" ${checkUser ? '' : `style="display: none"`} >
+                <button class="update">수정하기</button>
+                <button class="delete">삭제</button>
+              </div>
+            </div>
+            <textarea class="content update-content">${memo.content}</textarea>
+            `;
+            item.querySelector('.update').addEventListener('click', async () => {
+              await axios({
+                url: `http://localhost:3000/notes/${memo.id}`,
+                method: 'patch',
+                data: { content: item.querySelector('.content').value },
+              });
+              location.href = '/';
+            });
+          });
+
+          item.querySelector('.delete').addEventListener('click', async () => {
+            await axios({
+              url: `http://localhost:3000/notes/${memo.id}`,
+              method: 'delete',
+            });
+            location.href = '/';
+          });
+
+          $('.memo-list').appendChild(item);
+        });
+
+        $('.pagination').innerHTML = '';
+        for (let i = 0; i < memoListCount / 8; i++) {
+          const item = document.createElement('button');
+          item.innerHTML = `${i + 1}`;
+          item.addEventListener('click', () => addMemoItem(i + 1));
+          $('.pagination').appendChild(item);
+        }
+      }
+
+      function showCookieValue(key) {
+        cookieValue = document.cookie.split('; ').find((row) => row.startsWith(key));
+        if (cookieValue == undefined) {
+          return false;
+        }
+        return cookieValue.split('=')[1];
+      }
+
+      function isLogin() {
+        const result = showCookieValue('userId');
+        if (result) {
+          $(
+            '.my',
+          ).innerHTML = `<button class="post">메모 추가</button><span class="username">${result}</span>`;
+          $('.post').addEventListener('click', () => (location.href = '/post'));
+        } else {
+          $('.my').innerHTML = `<button class="sign">회원가입</button>
+            <button class="login">로그인</button>`;
+          $('.sign').addEventListener('click', () => (location.href = '/sign'));
+          $('.login').addEventListener('click', () => (location.href = '/login'));
+        }
+      }
+
+      addMemoItem();
+      isLogin();
+    </script>
+  </body>
+</html>

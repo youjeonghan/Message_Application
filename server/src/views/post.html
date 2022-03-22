@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>메모 어플</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+      .post-section {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        border: 3px solid;
+        border-radius: 5px;
+        padding: 10px;
+      }
+      input {
+        border: 1px solid;
+        border-radius: 10px;
+      }
+      .text-input {
+        display: block;
+        width: 500px;
+        height: 500px;
+        font-size: 20px;
+        margin-bottom: 10px;
+
+        resize: none;
+      }
+      .post-submit {
+        height: 30px;
+        font-size: 15px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="post-section">
+      <textarea
+        class="text-input"
+        name="name"
+        type="text"
+        placeholder="내용을 입력해주세요"
+      ></textarea>
+      <input class="post-submit" type="submit" value="저장하기" />
+    </div>
+    <script>
+      const $ = document.querySelector.bind(document);
+      $('.post-submit').addEventListener('click', async () => {
+        console.log($('.text-input').value);
+        await axios({
+          url: `http://localhost:3000/notes`,
+          method: 'post',
+          data: { content: $('.text-input').value },
+        });
+        location.href = '/';
+      });
+    </script>
+  </body>
+</html>
